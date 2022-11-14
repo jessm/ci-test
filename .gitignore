@@ -1,0 +1,10 @@
+**.DS_Store**
+**__pycache__**
+node_modules
+.vscode
+
+static/*.js
+static/*.js.map
+static/*.css
+static/*.css.map
+static/rest_framework
