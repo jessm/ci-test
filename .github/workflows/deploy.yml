@@ -45,7 +45,7 @@ jobs:
         
     - id: 'scp'
       run: |
-        gcloud compute scp artifacts.tar.gz cos-test:/var/deploy
+        gcloud compute scp artifacts.tar.gz --zone="us-east1-b" cos-test:/var/deploy
     
     - id: 'compute-ssh'
       uses: 'google-github-actions/ssh-compute@v0.1.1'
