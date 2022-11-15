@@ -1,4 +1,4 @@
-FROM python:3.10.7
+FROM python:3.10.7-slim
 
 EXPOSE 80
 
@@ -9,7 +9,9 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY ulticlipper ulticlipper
+COPY backend backend
+COPY manage.py manage.py
 
 CMD python manage.py makemigrations \
     && python manage.py migrate \

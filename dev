@@ -40,3 +40,15 @@ if [[ $1 == "down" ]]; then
     echo Taking down $2 environment
     exec docker compose -f docker-compose-$2.yml down --volumes
 fi
+
+if [[ $1 == "build-prod" ]]; then
+    docker build -o type=tar,dest=ulticlipper-proxy-prod.tar.gz -f deploy/dockerfiles/caddy.dockerfile .
+    docker build -o type=tar,dest=ulticlipper-backend-prod.tar.gz -f deploy/dockerfiles/django-prod.dockerfile .
+fi
+
+# For running on server
+if [[ $1 == "deploy" ]]; then
+    docker import /var/deploy/ulticlipper-proxy-prod.tar.gz ulticlipper-proxy-prod
+    docker import /var/deploy/ulticlipper-backend-prod.tar.gz ulticlipper-backend-prod
+    cd /var/deploy && ./dev env prod
+fi

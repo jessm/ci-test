@@ -5,8 +5,6 @@ services:
         depends_on:
         - backend
         image: ulticlipper-proxy-prod
-        build:
-            dockerfile: deploy/dockerfiles/caddy.dockerfile
         container_name: ulticlipper-proxy-prod
         environment:
             ALLOWED_HOSTS: ulticlipper.jessmuir.com
@@ -19,8 +17,6 @@ services:
         depends_on:
         - database
         image: ulticlipper-backend-prod
-        build:
-            dockerfile: deploy/dockerfiles/django-prod.dockerfile
         container_name: ulticlipper-backend-prod
         environment:
             ENV_NAME: prod
