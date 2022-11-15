@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  utest:
+  unit-test:
 
     runs-on: ubuntu-latest
 
@@ -16,6 +16,13 @@ jobs:
     - uses: actions/checkout@v3
     - name: Run unit tests
       run: ./dev test
+  
+  integration-test:
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
     - name: Run integration tests
       run: ./dev itest
 
