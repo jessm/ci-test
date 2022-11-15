@@ -39,13 +39,13 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: deploy-artifacts
+    
+    - id: 'gcloud-setup'
+      uses: 'google-github-actions/setup-gcloud@v1'
         
     - id: 'scp'
       run: |
-        echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ssh_key_file
-        chmod 0600 ssh_key_file
-        ssh-keyscan ulticlipper.jessmuir.com >> ~/.ssh/known_hosts
-        scp -i ssh_key_file artifacts.tar.gz -o StrictHostKeyChecking=no 481444103467-compute@ulticlipper.jessmuir.com:/var
+        gcloud compute scp artifacts.tar.gz cos-test:/var/deploy
     
     - id: 'compute-ssh'
       uses: 'google-github-actions/ssh-compute@v0.1.1'
