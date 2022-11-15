@@ -44,6 +44,7 @@ jobs:
       run: |
         echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ssh_key_file
         chmod 0600 ssh_key_file
+        ssh-keygen -R hostname
         scp -i ssh_key_file artifacts.tar.gz -o StrictHostKeyChecking=no 481444103467-compute@ulticlipper.jessmuir.com:/var
     
     - id: 'compute-ssh'
