@@ -14,8 +14,7 @@ jobs:
     - name: Copy a test file
       id: copy_test
       run: |
-        # docker build -o type=tar,dest=ulticlipper-proxy-prod.tar.gz -f deploy/dockerfiles/caddy.dockerfile .
-        # docker build -o type=tar,dest=ulticlipper-backend-prod.tar.gz -f deploy/dockerfiles/django-prod.dockerfile .
+        dev build-prod
         tar -zcvf artifacts.tar.gz dev docker-compose-prod.yml # ulticlipper-proxy-prod.tar.gz ulticlipper-backend-prod.tar.gz
         
     - id: 'auth'
