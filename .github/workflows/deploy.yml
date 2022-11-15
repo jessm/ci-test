@@ -42,7 +42,8 @@ jobs:
     - id: 'scp'
       run: |
         echo ${{ secrets.GCP_SSH_PRIVATE_KEY }} > ssh_key_file
-        scp -i ssh_key_file artifacts.tar.gz 481444103467-compute@ulticlipper.jessmuir.com:~
+        chmod 0600 ssh_key_file
+        scp -i ssh_key_file artifacts.tar.gz 481444103467-compute@ulticlipper.jessmuir.com:/var
     
     - id: 'compute-ssh'
       uses: 'google-github-actions/ssh-compute@v0.1.1'
