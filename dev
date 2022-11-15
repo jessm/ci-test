@@ -46,8 +46,8 @@ if [[ $1 == "build-prod" ]]; then
     # docker build  -f deploy/dockerfiles/django-prod.dockerfile . -t ulticlipper-backend-prod
     # docker save -o ulticlipper-proxy-prod.tar.gz ulticlipper-proxy-prod
     # docker save -o ulticlipper-backend-prod.tar.gz ulticlipper-backend-prod
-    docker build --output - -f deploy/dockerfiles/caddy.dockerfile . > ulticlipper-proxy-prod.tar.gz
-    docker build --output - -f deploy/dockerfiles/django-prod.dockerfile . > ulticlipper-backend-prod.tar.gz
+    docker build --output type=tar,dest=- -f deploy/dockerfiles/caddy.dockerfile . > ulticlipper-proxy-prod.tar.gz
+    docker build --output type=tar,dest=- -f deploy/dockerfiles/django-prod.dockerfile . > ulticlipper-backend-prod.tar.gz
 fi
 
 # For running on server

@@ -36,8 +36,8 @@ jobs:
           sudo rm -rf /var/deploy
           sudo mkdir -p /var/deploy 
           sudo touch /var/deploy/.env
-          sudo echo "${{ secrets.DJANGO_SECRET_KEY }}" > /var/deploy/.env
           sudo chown 481444103467-compute /var/deploy
+          echo "${{ secrets.DJANGO_SECRET_KEY }}" >> /var/deploy/.env
         
     - id: 'scp'
       run: |
