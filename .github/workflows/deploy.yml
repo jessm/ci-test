@@ -44,7 +44,7 @@ jobs:
       run: |
         gcloud compute scp artifacts.tar.gz --zone="us-east1-b" 481444103467-compute@cos-test:/var/deploy
         
-    - id: 'extract'
+    - id: 'extract-and-run'
       uses: 'google-github-actions/ssh-compute@v0.1.1'
       with: 
         instance_name: cos-test
@@ -53,10 +53,5 @@ jobs:
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
         command: |
           tar -zxvf /var/deploy/artifacts.tar.gz -C /var/deploy
-          ls /var/deploy
-          
-    - id: 'check-gcp-output'
-      run: |-
-        echo '${{ steps.compute-ssh.outputs.stdout }}'
-        echo '${{ steps.compute-ssh.outputs.stderr }}'
+          /var/deploy/dev deploy
 
