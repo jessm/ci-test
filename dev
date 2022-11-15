@@ -42,8 +42,10 @@ if [[ $1 == "down" ]]; then
 fi
 
 if [[ $1 == "build-prod" ]]; then
-    docker build -o type=tar,dest=ulticlipper-proxy-prod.tar.gz -f deploy/dockerfiles/caddy.dockerfile .
-    docker build -o type=tar,dest=ulticlipper-backend-prod.tar.gz -f deploy/dockerfiles/django-prod.dockerfile .
+    docker build  -f deploy/dockerfiles/caddy.dockerfile . -t ulticlipper-proxy-prod
+    docker build  -f deploy/dockerfiles/django-prod.dockerfile . -t ulticlipper-backend-prod
+    docker save -o ulticlipper-proxy-prod.tar.gz ulticlipper-proxy-prod
+    docker save -o ulticlipper-backend-prod.tar.gz ulticlipper-backend-prod
 fi
 
 # For running on server

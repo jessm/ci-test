@@ -11,8 +11,8 @@ jobs:
     
     steps:
     - uses: 'actions/checkout@v3'
-    - name: Copy a test file
-      id: copy_test
+    - name: 'Build containers'
+      id: 'build'
       run: |
         ./dev build-prod
         tar -zcvf artifacts.tar.gz dev docker-compose-prod.yml ulticlipper-proxy-prod.tar.gz ulticlipper-backend-prod.tar.gz
