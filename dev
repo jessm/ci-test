@@ -54,12 +54,21 @@ fi
 if [[ $1 == "deploy" ]]; then
     docker container stop $(docker ps -aq)
     docker rm $(docker ps -aq)
+    docker network prune -f
     # docker import /var/deploy/ulticlipper-proxy-prod.tar.gz ulticlipper-proxy-prod
     # docker import /var/deploy/ulticlipper-backend-prod.tar.gz ulticlipper-backend-prod
     docker load -i /var/deploy/ulticlipper-proxy-prod.tar.gz
     docker load -i /var/deploy/ulticlipper-backend-prod.tar.gz
     
-    docker run -d -v postgres_data:/var/lib/postgresql/data --name ulticlipper-database-prod -e POSTGRES_USER=backend -e POSTGRES_PASSWORD=good_password postgres:14.5 
-    docker run -d --name ulticlipper-backend-prod -e ENV_NAME=prod --env-file /var/deploy/.env ulticlipper-backend-prod
-    docker run -d -v caddy_data:/data --name ulticlipper-proxy-prod -p 80:80 -p 443:443 -e ALLOWED_HOSTS=ulticlipper.jessmuir.com ulticlipper-proxy-prod 
+    docker network create ulticlipper
+    docker run -d -v postgres_data:/var/lib/postgresql/data --name ulticlipper-database-prod \
+        -e POSTGRES_USER=backend -e POSTGRES_PASSWORD=good_password \
+        --network=ulticlipper \
+        postgres:14.5 
+    docker run -d --name backend -e ENV_NAME=prod --env-file /var/deploy/.env \
+        --network=ulticlipper \
+        ulticlipper-backend-prod
+    docker run -d -v caddy_data:/data --name proxy -p 80:80 -p 443:443 -e ALLOWED_HOSTS=ulticlipper.jessmuir.com \
+        --network=ulticlipper \
+        ulticlipper-proxy-prod 
 fi
