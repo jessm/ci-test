@@ -42,7 +42,7 @@ jobs:
         
     - id: 'scp'
       run: |
-        echo ${{ secrets.GCP_SSH_PRIVATE_KEY }} > ssh_key_file
+        echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ssh_key_file
         chmod 0600 ssh_key_file
         scp -i ssh_key_file artifacts.tar.gz -o StrictHostKeyChecking=no 481444103467-compute@ulticlipper.jessmuir.com:/var
     
