@@ -1,0 +1,28 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "live" ]
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: 'actions/checkout@v3'
+    
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - id: 'compute-ssh'
+      uses: 'google-github-actions/ssh-compute@v0.1.1'
+      with:
+        instance_name: cos-test
+        zone: us-east1-b
+        user: 481444103467-compute@developer.gserviceaccount.com
+        ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
+        command: docker run bash:5.2.9-alpine3.16 echo testing testing 1 2 3
