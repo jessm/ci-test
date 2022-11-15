@@ -53,5 +53,5 @@ jobs:
         command: |
           tar -zxvf /var/deploy/artifacts.tar.gz -C /var/deploy
           sudo chmod +x /var/deploy/dev
-          /var/deploy/dev deploy
+          sudo /bin/bash /var/deploy/dev deploy
 

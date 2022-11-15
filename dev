@@ -50,7 +50,8 @@ fi
 
 # For running on server
 if [[ $1 == "deploy" ]]; then
+    docker rm $(docker ps -aq)
     docker import /var/deploy/ulticlipper-proxy-prod.tar.gz ulticlipper-proxy-prod
     docker import /var/deploy/ulticlipper-backend-prod.tar.gz ulticlipper-backend-prod
-    cd /var/deploy && ./dev env prod
+    docker compose -f /var/deploy/docker-compose-prod.yml up -d
 fi
