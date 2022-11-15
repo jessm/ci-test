@@ -52,5 +52,6 @@ jobs:
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
         command: |
           tar -zxvf /var/deploy/artifacts.tar.gz -C /var/deploy
+          sudo chmod +x /var/deploy/dev
           /var/deploy/dev deploy
 
