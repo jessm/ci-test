@@ -42,17 +42,17 @@ jobs:
     
     - id: 'gcloud-setup'
       uses: 'google-github-actions/setup-gcloud@v1'
-        
-    - id: 'scp'
-      run: |
-        gcloud compute scp artifacts.tar.gz --zone="us-east1-b" cos-test:/var/deploy
-    
-    - id: 'compute-ssh'
+      
+    - id: 'compute-ssh-setup'
       uses: 'google-github-actions/ssh-compute@v0.1.1'
-      with:
+      with: 
         instance_name: cos-test
         zone: us-east1-b
         user: 481444103467-compute
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
-        # command: docker run bash:5.2.9-alpine3.16 echo testing testing 1 2 3
         command: mkdir -p /var/deploy && echo ${{ secrets.DJANGO_SECRET_KEY }} > /var/deploy/.env
+        
+    - id: 'scp'
+      run: |
+        gcloud compute scp artifacts.tar.gz --zone="us-east1-b" 481444103467-compute@cos-test:/var/deploy
+
