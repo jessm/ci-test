@@ -14,7 +14,7 @@ jobs:
     - name: Copy a test file
       id: copy_test
       run: |
-        dev build-prod
+        ./dev build-prod
         tar -zcvf artifacts.tar.gz dev docker-compose-prod.yml # ulticlipper-proxy-prod.tar.gz ulticlipper-backend-prod.tar.gz
         
     - id: 'auth'
