@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -17,28 +17,11 @@ jobs:
         # docker build -o type=tar,dest=ulticlipper-proxy-prod.tar.gz -f deploy/dockerfiles/caddy.dockerfile .
         # docker build -o type=tar,dest=ulticlipper-backend-prod.tar.gz -f deploy/dockerfiles/django-prod.dockerfile .
         tar -zcvf artifacts.tar.gz dev docker-compose-prod.yml # ulticlipper-proxy-prod.tar.gz ulticlipper-backend-prod.tar.gz
-    
-    - uses: actions/upload-artifact@v3
-      with:
-        name: deploy-artifacts
-        path: artifacts.tar.gz
-
-  deploy:
-    needs: build
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: 'actions/checkout@v3'
-    
+        
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
       with:
         credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-    
-    - uses: actions/download-artifact@v3
-      with:
-        name: deploy-artifacts
     
     - id: 'gcloud-setup'
       uses: 'google-github-actions/setup-gcloud@v1'
@@ -51,6 +34,7 @@ jobs:
         user: 481444103467-compute
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
         command: |
+          sudo rm -rf /var/deploy
           sudo mkdir -p /var/deploy 
           sudo touch /var/deploy/.env
           sudo echo "${{ secrets.DJANGO_SECRET_KEY }}" > /var/deploy/.env
@@ -68,9 +52,8 @@ jobs:
         user: 481444103467-compute
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
         command: |
-          tar -zxvf /var/deploy/artifacts.tar.gz
+          tar -zxvf /var/deploy/artifacts.tar.gz -C /var/deploy
           ls /var/deploy
-          cat /var/deploy/docker-compose-prod.yml
           
     - id: 'check-gcp-output'
       run: |-
