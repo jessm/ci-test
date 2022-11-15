@@ -52,10 +52,28 @@ jobs:
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
         command: |
           sudo mkdir -p /var/deploy 
-          && sudo touch /var/deploy/.env
-          && sudo echo "${{ secrets.DJANGO_SECRET_KEY }}" > /var/deploy/.env
+          sudo touch /var/deploy/.env
+          sudo echo "${{ secrets.DJANGO_SECRET_KEY }}" > /var/deploy/.env
+          sudo chown 481444103467-compute /var/deploy
         
     - id: 'scp'
       run: |
         gcloud compute scp artifacts.tar.gz --zone="us-east1-b" 481444103467-compute@cos-test:/var/deploy
+        
+    - id: 'extract'
+      uses: 'google-github-actions/ssh-compute@v0.1.1'
+      with: 
+        instance_name: cos-test
+        zone: us-east1-b
+        user: 481444103467-compute
+        ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
+        command: |
+          tar -zxvf /var/deploy/artifacts.tar.gz
+          ls /var/deploy
+          cat /var/deploy/docker-compose-prod.yml
+          
+    - id: 'check-gcp-output'
+      run: |-
+        echo '${{ steps.compute-ssh.outputs.stdout }}'
+        echo '${{ steps.compute-ssh.outputs.stderr }}'
 
