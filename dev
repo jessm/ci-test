@@ -1,0 +1,42 @@
+#!/bin/bash
+
+if [[ $1 == "test" ]]; then
+    echo "Running unit tests"
+    docker build -t django-test -f deploy/dockerfiles/django-test.dockerfile .
+    result=$?
+    docker run --rm django-test
+    if [[ result -ne 0 ]]; then
+        exit $result
+    fi
+fi
+
+if [[ $1 == "itest" ]]; then
+    echo "Running integration tests"
+    docker compose -f docker-compose-ci.yml up --build -d
+    # wait for django container to come alive
+    while true; do
+        curl -f -s localhost/api/healthcheck/
+        if [[ $? -eq 0 ]]; then
+            break
+        fi
+        sleep 1
+    done
+    # run test container
+    docker build -t integration-test -f deploy/dockerfiles/integration-test.dockerfile .
+    docker run --rm --network=$(basename $PWD)_default integration-test
+    result=$?
+    docker compose -f docker-compose-ci.yml down --volumes
+    if [[ result -ne 0 ]]; then
+        exit $result
+    fi
+fi
+
+if [[ $1 == "env" ]]; then
+    echo Setting up $2 environment
+    exec docker compose -f docker-compose-$2.yml up --build
+fi
+
+if [[ $1 == "down" ]]; then
+    echo Taking down $2 environment
+    exec docker compose -f docker-compose-$2.yml down --volumes
+fi
