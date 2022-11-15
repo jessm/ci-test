@@ -23,6 +23,6 @@ jobs:
       with:
         instance_name: cos-test
         zone: us-east1-b
-        user: 481444103467-compute@developer.gserviceaccount.com
+        user: 481444103467-compute
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
         command: docker run bash:5.2.9-alpine3.16 echo testing testing 1 2 3
