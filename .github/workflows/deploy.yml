@@ -50,7 +50,7 @@ jobs:
         zone: us-east1-b
         user: 481444103467-compute
         ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
-        command: mkdir -p /var/deploy && echo ${{ secrets.DJANGO_SECRET_KEY }} > /var/deploy/.env
+        command: mkdir -p /var/deploy && echo "${{ secrets.DJANGO_SECRET_KEY }}" > /var/deploy/.env
         
     - id: 'scp'
       run: |
